@@ -2,15 +2,11 @@ require('dotenv').config();
 const puppeteer = require('puppeteer');
 const { sendTelegramMessage } = require('./telegram.js')
 
-  // const telegramIds = ['325271066', '425159769'];
   const telegramAdminId = process.env.TELEGRAM_ADMIN_ID;
   const telegramIds = process.env.TELEGRAM_ID_LIST.split(',').concat(telegramAdminId);
-  // const telegramIds = [telegramAdminId];
 
 
-(async () => {
-  // const sitesUrl = ['https://vrn.kassir.ru/frame/event/1724640?key=0ba9d050-ad2c-cd51-ad78-e649c6f94f9a&WIDGET_4008333277=4kuh76ooed9psnofsrh72anfqn', 'https://vrn.kassir.ru/frame/event/1724641?key=0ba9d050-ad2c-cd51-ad78-e649c6f94f9a&WIDGET_4008333277=4kuh76ooed9psnofsrh72anfqn', 'https://vrn.kassir.ru/frame/event/1724642?key=0ba9d050-ad2c-cd51-ad78-e649c6f94f9a&WIDGET_4008333277=4kuh76ooed9psnofsrh72anfqn'];
-  // const sitesUrl = ['https://vrn.kassir.ru/frame/action/180639?key=0ba9d050-ad2c-cd51-ad78-e649c6f94f9a&WIDGET_4008333277=4kuh76ooed9psnofsrh72anfqn#1724650'];
+ async function ParserTickets() {
   const sitesUrl = process.env.SITES_URL.split(',')
 
   const titleSelector = 'h1';
@@ -61,4 +57,8 @@ const { sendTelegramMessage } = require('./telegram.js')
     console.error(`${new Date().toISOString()} Произошла ошибка ${String(error)}`);
     sendTelegramMessage(telegramAdminId, `Произошла ошибка ${String(error)}`)
   }
-})();
+};
+
+module.exports = {
+  ParserTickets
+}
