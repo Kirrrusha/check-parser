@@ -3,11 +3,10 @@ const puppeteer = require('puppeteer');
 const { sendTelegramMessage } = require('./telegram.js')
 
   const telegramAdminId = process.env.TELEGRAM_ADMIN_ID;
-  const telegramIds = process.env.TELEGRAM_ID_LIST.split(',').concat(telegramAdminId);
-  const cacheDirectory = process.env.CACHE_DIRECTORY;
+  const telegramIds = (process.env.TELEGRAM_ID_LIST || '').split(',').concat(telegramAdminId);
 
  async function ParserTickets() {
-  const sitesUrl = process.env.SITES_URL.split(',');
+  const sitesUrl = (process.env.SITES_URL || '').split(',');
 
   const titleSelector = 'h1';
   const sectorListSelector = 'section.sector-list';
@@ -17,7 +16,7 @@ const { sendTelegramMessage } = require('./telegram.js')
 
   try {
     for (const url of sitesUrl) {
-      const browser = await puppeteer.launch({ headless: 'new', cacheDirectory });
+      const browser = await puppeteer.launch({ headless: 'new' });
       const page = await browser.newPage();
 
       await page.goto(url);
@@ -31,9 +30,9 @@ const { sendTelegramMessage } = require('./telegram.js')
       if(!!emptyElement) {
         await browser.close();
         console.log(`${new Date().toISOString()} Нет билетов на ${String(dateText.trim())}`);
-        // telegramIds.forEach(telegramId => {
-        //   sendTelegramMessage(telegramId, `${titleText}: нет билетов на ${String(dateText.trim())}`)
-        // })
+        telegramIds.forEach(telegramId => {
+          sendTelegramMessage(telegramId, `${titleText}: нет билетов на ${String(dateText.trim())}`)
+        })
         continue;
       }
 
@@ -58,10 +57,6 @@ const { sendTelegramMessage } = require('./telegram.js')
     sendTelegramMessage(telegramAdminId, `Произошла ошибка ${String(error)}`)
   }
 };
-
-if(!cacheDirectory) {
-  ParserTickets();
-}
 
 module.exports = {
   ParserTickets
