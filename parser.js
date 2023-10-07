@@ -4,10 +4,10 @@ const { sendTelegramMessage } = require('./telegram.js')
 
   const telegramAdminId = process.env.TELEGRAM_ADMIN_ID;
   const telegramIds = process.env.TELEGRAM_ID_LIST.split(',').concat(telegramAdminId);
-
+  const cacheDirectory = process.env.CACHE_DIRECTORY;
 
  async function ParserTickets() {
-  const sitesUrl = process.env.SITES_URL.split(',')
+  const sitesUrl = process.env.SITES_URL.split(',');
 
   const titleSelector = 'h1';
   const sectorListSelector = 'section.sector-list';
@@ -17,7 +17,7 @@ const { sendTelegramMessage } = require('./telegram.js')
 
   try {
     for (const url of sitesUrl) {
-      const browser = await puppeteer.launch({ headless: 'new' });
+      const browser = await puppeteer.launch({ headless: 'new', cacheDirectory });
       const page = await browser.newPage();
 
       await page.goto(url);
@@ -58,6 +58,10 @@ const { sendTelegramMessage } = require('./telegram.js')
     sendTelegramMessage(telegramAdminId, `Произошла ошибка ${String(error)}`)
   }
 };
+
+if(!cacheDirectory) {
+  ParserTickets();
+}
 
 module.exports = {
   ParserTickets
