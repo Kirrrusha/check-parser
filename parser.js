@@ -40,7 +40,7 @@ const { sendTelegramMessage } = require('./telegram.js')
           const text =  $(element).find('span').text();
           console.log(`${new Date().toISOString()} ${titleText}: билет ${text}` );
           telegramIds.forEach(telegramId => {
-            sendTelegramMessage(telegramId, `${titleText}: билет ${text}`)
+            sendTelegramMessage(telegramId, url, `${titleText}: билет ${text}, <a href="${url}">Ссылка на покупку</a>`)
           })
         })
       } else {

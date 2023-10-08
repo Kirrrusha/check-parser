@@ -9,11 +9,10 @@ bot.start((ctx) => {
   ctx.reply('Привет!');
 });
 
-// Запускаем бот
 bot.launch();
 
 function sendTelegramMessage(chatId, message) {
-  bot.telegram.sendMessage(chatId, message)
+  bot.telegram.sendMessage(chatId, message, { parse_mode: 'HTML' })
     .then(() => {
       console.log(`Сообщение успешно отправлено: ${message}`);
     })
