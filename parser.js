@@ -35,13 +35,13 @@ async function ParserTickets() {
           });
 
           res.on('end', async () => {
-            // const $ = cheerio.load(data);
             await Check(data)
           });
         });
 
         req.on('error', (error) => {
           console.error('Ошибка:', error);
+          sendTelegramMessage(telegramAdminId, `Ошибка: ${String(error)}`)
         });
 
         req.end();
